@@ -23,6 +23,13 @@ class Sub1Command extends Command
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
         $parser = parent::buildOptionParser($parser);
+        $parser->addOption('sub1-option', [
+            'help' => 'sub1 command option.',
+            'short' => 's',
+        ])->addOption('sub1-boolean-option', [
+            'help' => 'sub1 command boolean option.',
+            'boolean' => true,
+        ]);
 
         return $parser;
     }
@@ -37,6 +44,9 @@ class Sub1Command extends Command
     public function execute(Arguments $args, ConsoleIo $io)
     {
         $io->out('Sub1Command start.');
+
+        $io->out(sprintf("sub1-option: %s", $args->getOption('sub1-option')));
+        $io->out(sprintf("sub1-boolean-option: %s", $args->getOption('sub1-boolean-option') ? 'true' : 'false'));
 
         $io->out('Sub1Command end.');
     }

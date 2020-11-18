@@ -23,6 +23,12 @@ class Sub2Command extends Command
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
         $parser = parent::buildOptionParser($parser);
+        $parser->addOption('sub2-option', [
+            'help' => 'sub2 command option.',
+        ])->addOption('sub2-choice-option', [
+            'help' => 'sub2 command choices option.',
+            'choices' => ['hoge', 'fuga']
+        ]);
 
         return $parser;
     }
@@ -37,6 +43,9 @@ class Sub2Command extends Command
     public function execute(Arguments $args, ConsoleIo $io)
     {
         $io->out('Sub2Command start.');
+
+        $io->out(sprintf("sub2-option: %s", $args->getOption('sub2-option')));
+        $io->out(sprintf("sub2-choice-option: %s", $args->getOption('sub2-choice-option')));
 
         $io->out('Sub2Command end.');
     }
