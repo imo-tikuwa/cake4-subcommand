@@ -8,6 +8,7 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Console\Exception\ConsoleException;
+use Cake\Utility\Hash;
 
 /**
  * First command.
@@ -33,12 +34,7 @@ class FirstCommand extends Command
         $sub_commands = [];
         /** @var \Cake\Command\Command $sub_command */
         foreach ($this->sub_commands as $sub_command) {
-            $sub_commands[$sub_command::defaultName()] = [
-                // サブコマンドのクラス名
-                'class' => $sub_command,
-                // サブコマンドのオプション
-                'option' => (new $sub_command)->getOptionParser(),
-            ];
+            $sub_commands[$sub_command::defaultName()] = $sub_command;
         }
         $this->sub_commands = $sub_commands;
     }
@@ -56,7 +52,7 @@ class FirstCommand extends Command
             if (isset($argv[0]) && in_array($argv[0], array_keys($this->sub_commands), true)) {
                 $sub_command_name = array_shift($argv);
                 /** @var \Cake\Command\Command $sub_command */
-                $sub_command = new $this->sub_commands[$sub_command_name]['class'];
+                $sub_command = new $this->sub_commands[$sub_command_name];
                 $parser = $sub_command->getOptionParser();
             }
 
@@ -105,7 +101,6 @@ class FirstCommand extends Command
         $parser = parent::buildOptionParser($parser);
         $parser->addArgument('sub_command', [
             'help' => 'サブコマンド名を入力してください',
-            'required' => true,
             'choices' => $choices,
         ]);
 
@@ -122,6 +117,17 @@ class FirstCommand extends Command
     public function execute(Arguments $args, ConsoleIo $io)
     {
         $io->out('FirstCommand start.');
+
+        $outputs = [['sub command name', 'class path', 'class options']];
+        foreach ($this->sub_commands as $sub_command_name => $sub_command) {
+            $sub_command_options = (new $sub_command)->getOptionParser()->options();
+            $sub_command_option_names = array_map(function ($sub_command_option) {
+                /** @var \Cake\Console\ConsoleInputOption $sub_command_option */
+                return "--{$sub_command_option->name()}";
+            }, $sub_command_options);
+            $outputs[] = [$sub_command_name, $sub_command, implode(', ', $sub_command_option_names)];
+        }
+        $io->helper('Table')->output($outputs);
 
         $io->out('FirstCommand end.');
     }
