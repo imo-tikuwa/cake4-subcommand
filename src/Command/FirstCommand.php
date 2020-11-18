@@ -16,6 +16,8 @@ class FirstCommand extends Command
 {
     /**
      * FirstCommand のサブコマンドをここに指定する
+     *
+     * @var array
      */
     private $sub_commands = [
         Sub1Command::class,
@@ -80,10 +82,13 @@ class FirstCommand extends Command
 
         // サブコマンドが存在する場合、そちらを実行
         if (isset($sub_command)) {
-            return $sub_command->execute($args, $io);
-        } else {
-            return $this->execute($args, $io);
+            $result = $sub_command->execute($args, $io);
+            if ($result === null || is_int($result)) {
+                return $result;
+            }
         }
+
+        return $this->execute($args, $io);
     }
 
     /**
@@ -111,7 +116,7 @@ class FirstCommand extends Command
      *
      * @param \Cake\Console\Arguments $args The command arguments.
      * @param \Cake\Console\ConsoleIo $io The console io
-     * @return null|void|int The exit code or null for success
+     * @return null|int The exit code or null for success
      */
     public function execute(Arguments $args, ConsoleIo $io)
     {
@@ -129,5 +134,7 @@ class FirstCommand extends Command
         $io->helper('Table')->output($outputs);
 
         $io->out('FirstCommand end.');
+
+        return static::CODE_SUCCESS;
     }
 }
