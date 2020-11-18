@@ -8,7 +8,6 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Console\Exception\ConsoleException;
-use Cake\Utility\Hash;
 
 /**
  * First command.
@@ -24,7 +23,7 @@ class FirstCommand extends Command
     ];
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function __construct()
     {
@@ -52,7 +51,7 @@ class FirstCommand extends Command
             if (isset($argv[0]) && in_array($argv[0], array_keys($this->sub_commands), true)) {
                 $sub_command_name = array_shift($argv);
                 /** @var \Cake\Command\Command $sub_command */
-                $sub_command = new $this->sub_commands[$sub_command_name];
+                $sub_command = new $this->sub_commands[$sub_command_name]();
                 $parser = $sub_command->getOptionParser();
             }
 
@@ -120,10 +119,10 @@ class FirstCommand extends Command
 
         $outputs = [['sub command name', 'class path', 'class options']];
         foreach ($this->sub_commands as $sub_command_name => $sub_command) {
-            $sub_command_options = (new $sub_command)->getOptionParser()->options();
-            $sub_command_option_names = array_map(function ($sub_command_option) {
-                /** @var \Cake\Console\ConsoleInputOption $sub_command_option */
-                return "--{$sub_command_option->name()}";
+            $sub_command_options = (new $sub_command())->getOptionParser()->options();
+            $sub_command_option_names = array_map(function ($s) {
+                /** @var \Cake\Console\ConsoleInputOption $s */
+                return "--{$s->name()}";
             }, $sub_command_options);
             $outputs[] = [$sub_command_name, $sub_command, implode(', ', $sub_command_option_names)];
         }

@@ -45,8 +45,8 @@ class Sub1Command extends Command
     {
         $io->out('Sub1Command start.');
 
-        $io->out(sprintf("sub1-option: %s", $args->getOption('sub1-option')));
-        $io->out(sprintf("sub1-boolean-option: %s", $args->getOption('sub1-boolean-option') ? 'true' : 'false'));
+        $io->out(sprintf('sub1-option: %s', $args->getOption('sub1-option')));
+        $io->out(sprintf('sub1-boolean-option: %s', $args->getOption('sub1-boolean-option') ? 'true' : 'false'));
 
         $io->out('Sub1Command end.');
     }

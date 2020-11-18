@@ -27,7 +27,7 @@ class Sub2Command extends Command
             'help' => 'sub2 command option.',
         ])->addOption('sub2-choice-option', [
             'help' => 'sub2 command choices option.',
-            'choices' => ['hoge', 'fuga']
+            'choices' => ['hoge', 'fuga'],
         ]);
 
         return $parser;
@@ -44,8 +44,8 @@ class Sub2Command extends Command
     {
         $io->out('Sub2Command start.');
 
-        $io->out(sprintf("sub2-option: %s", $args->getOption('sub2-option')));
-        $io->out(sprintf("sub2-choice-option: %s", $args->getOption('sub2-choice-option')));
+        $io->out(sprintf('sub2-option: %s', $args->getOption('sub2-option')));
+        $io->out(sprintf('sub2-choice-option: %s', $args->getOption('sub2-choice-option')));
 
         $io->out('Sub2Command end.');
     }
